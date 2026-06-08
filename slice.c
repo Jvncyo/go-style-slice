@@ -42,6 +42,7 @@ Int2DSlice slice2d(
     */
     int *data = arr + (row_low * stride) + col_low;
     Int2DSlice slice = {data, rows, cols, row_cap, col_cap, stride};
+    return slice;
 }
 
 Int2DSlice islice2d_slice(
@@ -51,6 +52,13 @@ Int2DSlice islice2d_slice(
     int col_low,
     int col_high)
 {
+    if(row_high < row_low || row_high < 0 || row_low < 0 || row_high > s.row_cap || row_low > s.row_cap) slice_error("Row values are wrong\n");
+    if(col_high < col_low || col_high < 0 || col_low < 0 || col_high > s.col_cap || col_low > s.col_cap) slice_error("Column values are wrong\n");
+
+    int rows = row_high - row_low;
+    int cols = col_high - col_low;
+    if(s.row_cap < rows) slice_error("Range of Row is too large\n");
+    if(s.col_cap < cols) slice_error("Range of Column is too large\n");
     /*
         Hint:
         기존 1차원 slice 구현과 맞추기 위해
@@ -59,7 +67,8 @@ Int2DSlice islice2d_slice(
 
         즉, 현재 보이는 영역보다 더 넓게 다시 slice할 수 있다.
     */
-
+    int row_cap = s.row_cap - row_low;
+    int col_cap = s.col_cap - col_low;
     /*
         Hint:
         여기서 s.cols가 아니라 s.stride를 사용해야 한다.
@@ -67,6 +76,9 @@ Int2DSlice islice2d_slice(
         s.cols는 현재 slice가 보는 열 개수이고,
         s.stride는 실제 한 행의 길이이다.
     */
+   int *data = (s.data - s.stride + s.row_cap) + (row_low * s.stride) + col_low;
+   Int2DSlice slice = {data, rows, cols, row_cap, col_cap, s.stride};
+   return slice;
 }
 
 int islice2d_rows(Int2DSlice s)
