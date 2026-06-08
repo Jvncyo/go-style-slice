@@ -76,7 +76,7 @@ Int2DSlice islice2d_slice(
         s.cols는 현재 slice가 보는 열 개수이고,
         s.stride는 실제 한 행의 길이이다.
     */
-   int *data = (s.data - s.stride + s.row_cap) + (row_low * s.stride) + col_low;
+   int *data = s.data + (row_low * s.stride) + col_low;
    Int2DSlice slice = {data, rows, cols, row_cap, col_cap, s.stride};
    return slice;
 }
