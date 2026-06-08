@@ -60,31 +60,37 @@ Int2DSlice islice2d_slice(
 int islice2d_rows(Int2DSlice s)
 {
     // Hint: 현재 slice가 보는 행 개수
+    return s.rows;
 }
 
 int islice2d_cols(Int2DSlice s)
 {
     // Hint: 현재 slice가 보는 열 개수
+    return s.cols;
 }
 
 int islice2d_row_cap(Int2DSlice s)
 {
     // Hint: slice가 볼 수 있는 행의 총 개수
+    return s.row_cap;
 }
 
 int islice2d_col_cap(Int2DSlice s)
 {
     // Hint: slice가 볼 수 있는 열의 총 개수
+    return s.col_cap;
 }
 
 int islice2d_get(Int2DSlice s, int row, int col)
 {
     // Hint: s.data[row * s.stride + col]의 위치
+    return s.data[row * s.stride + col];
 }
 
 void islice2d_set(Int2DSlice s, int row, int col, int value)
 {
     // Hint: s.data[row * s.stride + col]의 위치
+    s.data[row * s.stride + col] = value;
 }
 
 int islice2d_append_row(Int2DSlice *s, const int *row_values)
