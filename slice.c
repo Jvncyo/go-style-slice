@@ -125,6 +125,51 @@ int islice2d_append_row(Int2DSlice *s, const int *row_values)
 int islice2d_append_rows(Int2DSlice *s, const int *values, int n_rows)
 {
     // Hint: n_rows x cols 크기의 values 배열이 row-major 순서로 저장되어 있다고 가정한다.
+    if(s == NULL) return -1;
+    int new_cap;
+    int required_rows = s->rows + n_rows;
+
+    if(s->row_cap >= required_rows) {
+        for(int i = 0; i < n_rows; i++) {
+            for(int j = 0; j < s->cols; j++) {
+                int idx = (s->stride * i) + j;
+                *(s->data + (s->stride * s->rows) + idx) = values[(s->cols * i) + j];
+            }
+        }
+        s->rows += n_rows;
+        return 0;
+    } else {
+        if(s->rows == 0) {
+            new_cap = 1;
+        } else {
+            new_cap = s->rows;
+        }
+
+        while(new_cap < required_rows) {
+            new_cap = new_cap * 2;
+        }
+
+        int *newData = malloc(sizeof(int) * new_cap * s->col_cap);
+
+        for(int i = 0; i < s->rows; i++) {
+            for(int j = 0; j < s->col_cap; j++) {
+                newData[(i * s->col_cap) + j] = s->data[(s->stride * i) + j];
+            }
+        }
+        for(int i = 0; i < n_rows; i++) {
+            for(int j = 0; j < s->cols; j++) {
+                int idx = (s->col_cap * i) + j;
+                newData[(s->col_cap * s->rows) + idx] = values[(s->cols * i) + j];
+            }
+        }
+        s->row_cap = new_cap;
+        s->rows += n_rows;
+        s->stride = s->col_cap;
+        s->data = newData;
+        return 0;
+    }
+
+    return -1;
 }
 
 void islice2d_print(Int2DSlice s)
