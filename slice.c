@@ -17,6 +17,14 @@ Int2DSlice slice2d(
     int col_low,
     int col_high)
 {
+    if(arr == NULL) slice_error("Array is null\n");
+    if(row_high < row_low || row_high < 0 || row_low < 0 || row_high > arr_rows || row_low > arr_rows) slice_error("Row values are wrong\n");
+    if(col_high < col_low || col_high < 0 || col_low < 0 || col_high > arr_cols || col_low > arr_cols) slice_error("Column values are wrong\n");
+
+    int rows = row_high - row_low;
+    int cols = col_high - col_low;
+    if(arr_rows < rows) slice_error("Range of Row is too large\n");
+    if(arr_cols < cols) slice_error("Range of Column is too large\n");
     /*
         Hint:
         2차원 배열은 메모리에서 1차원처럼 연속 저장된다.
@@ -24,12 +32,16 @@ Int2DSlice slice2d(
         arr[row][col]의 위치:
         row * arr_cols + col
     */
-
+    int stride = arr_cols;
+    int row_cap = arr_rows - row_low;
+    int col_cap = arr_cols - col_low;
     /*
         Hint:
         stride는 원본 배열의 실제 열 개수이다.
         다음 행으로 이동할 때 stride만큼 이동해야 한다.
     */
+    int *data = arr + (row_low * stride) + col_low;
+    Int2DSlice slice = {data, rows, cols, row_cap, col_cap, stride};
 }
 
 Int2DSlice islice2d_slice(
