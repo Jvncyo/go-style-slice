@@ -111,7 +111,7 @@ int islice2d_append_rows(Int2DSlice *s, const int *values, int n_rows)
 {
     // n_rows x cols 크기의 values 배열이 row-major 순서로 저장되어 있다고 가정한다.
     
-    if(s == NULL) return -1; // 예외처리
+    if(s == NULL || values == NULL || n_rows < 0) return -1; // 예외처리
     int new_cap; // new row_cap
     int required_rows = s->rows + n_rows; // 필요한 row 개수 설정
 
